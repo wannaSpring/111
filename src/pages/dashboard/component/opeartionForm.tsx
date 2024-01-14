@@ -18,8 +18,8 @@ const OperationTable: FC = () => {
   const [editFramework, setEditFramework] = useState<FrameworkItem>();
 
   const tableColums = [
-    { title: '操作账号', width: '200px', dataIndex: 'actor_name' },
     { title: '操作时间', width: '200px', dataIndex: 'created_time_out' },
+    { title: '操作账号', width: '200px', dataIndex: 'actor_name' },
     { title: '操作事件', width: '200px', dataIndex: 'object_type_out' },
     {
       title: '操作',

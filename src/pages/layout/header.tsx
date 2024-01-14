@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined } from '@ant-design/icons';
+import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import { Dropdown, Layout, theme as antTheme, Tooltip } from 'antd';
 import { createElement } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -81,11 +81,9 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
 
   return (
     <Header className="layout-page-header bg-2" style={{ backgroundColor: token.token.colorBgContainer }}>
-      {device !== 'MOBILE' && (
-        <div className="logo" style={{ width: collapsed ? 80 : 200 }} onClick={toggle}>
-          <img src={collapsed ? verticalLogo : LogoPng} alt="" style={{ marginRight: collapsed ? '2px' : '20px' }} />
-        </div>
-      )}
+      <div className="logo" style={{ width: collapsed ? 80 : 200 }} onClick={toggle}>
+        <img src={collapsed ? verticalLogo : LogoPng} alt="" style={{ marginRight: collapsed ? '2px' : '20px' }} />
+      </div>
       <div className="layout-page-header-main">
         <div></div>
         <div className="actions">
@@ -97,6 +95,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
             <span>
               {createElement(theme === 'dark' ? SunSvg : MoonSvg, {
                 onClick: onChangeTheme,
+                style: { width: '18px', height: '18px' },
               })}
             </span>
           </Tooltip>
@@ -151,7 +150,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
               }}
             >
               <span className="user-action">
-                <img src={Avator} className="user-avator" alt="avator" />
+                <UserOutlined />
               </span>
             </Dropdown>
           ) : (

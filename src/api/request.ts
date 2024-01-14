@@ -109,10 +109,14 @@ export const request = <T = any>(
 
   if (method === 'post') {
     return axiosInstance.post(url, data, config);
-  } else {
+  } else if (method === 'get') {
     return axiosInstance.get(url, {
       params: data,
       ...config,
     });
+  } else if (method === 'put') {
+    return axiosInstance.put(url, data);
+  } else if (method === 'delete') {
+    return axiosInstance.delete(url, data);
   }
 };

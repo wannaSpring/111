@@ -27,7 +27,6 @@ const DashBoardPage: FC = () => {
   const [isUploading, setIsUploading] = useState(false);
 
   const incompleteColums = [
-    { title: '缺失条数', width: '200px', dataIndex: 'count', render: (count: string) => `${count} 条` },
     {
       title: '订单日期',
       width: '200px',
@@ -37,6 +36,8 @@ const DashBoardPage: FC = () => {
       },
     },
     { title: '缺失部分', width: '200px', dataIndex: 'source_type_display' },
+
+    { title: '缺失条数', width: '200px', dataIndex: 'count', render: (count: string) => `${count} 条` },
   ];
 
   const handleUpload = async (options: { file: any; onSuccess: any; onError: any }) => {
@@ -75,8 +76,8 @@ const DashBoardPage: FC = () => {
   const onSubmit = async () => {
     const values = await form.validateFields();
     const params = {
-      pay_at_max: values.pay_time[0],
-      pay_at_min: values.pay_time[1],
+      pay_time_max: values.pay_time[0],
+      pay_time_min: values.pay_time[1],
     };
 
     getPurchaseOverview(params).then(({ data }) => {
@@ -88,7 +89,7 @@ const DashBoardPage: FC = () => {
     <div className="DashBoardPageWrap">
       <Form form={form} className="searchWrap">
         <div className="left">
-          <Form.Item name="pay_time" label="数据筛选" required>
+          <Form.Item name="pay_time" label="数据筛选" rules={[{ required: true, message: '请选择时间范围' }]}>
             <RangePicker />
           </Form.Item>
         </div>

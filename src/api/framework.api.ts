@@ -12,7 +12,8 @@ export const getFrameworkList = (data: any) => request<FramewrokListResponse>('g
 // creat
 export const creatFramework = (data: FrameworkItem) => request<FramewrokResponse>('post', '/frames', data);
 // edit
-export const editFramework = (data: FrameworkItem) => request<FramewrokResponse>('put', `/frames/${data.id}`, data);
+export const editFramework = (id: number, data: FrameworkItem) =>
+  request<FramewrokResponse>('put', `/frames/${id}`, data);
 // consume
 export const getConsumeTask = (data: any) => request<ConsumeTaskResponse>('get', '/frame_tasks', data);
 //delete consume

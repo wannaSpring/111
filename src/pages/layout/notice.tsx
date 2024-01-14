@@ -42,7 +42,7 @@ const HeaderNoticeComponent: FC = () => {
 
   const tabs = (
     <div>
-      <Spin tip="Loading..." indicator={antIcon} spinning={loading}>
+      <Spin tip="加载中..." indicator={antIcon} spinning={loading}>
         <Tabs defaultActiveKey="1">
           <TabPane
             tab={`${formatMessage({

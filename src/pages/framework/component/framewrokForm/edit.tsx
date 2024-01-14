@@ -20,24 +20,19 @@ import React, { useEffect, useState } from 'react';
 import { creatFramework, editFramework } from '@/api/framework.api';
 import { frameworkDesc, FrameWorkMode } from '@/utils/consts';
 
-interface FrameworkFormProps {
+interface EditFrameworkFormProps {
   open: boolean;
+  framework: FrameworkItem | null;
   onHandleClose: () => void;
 }
 
-const FrameworkForm: React.FC<FrameworkFormProps> = ({ open, onHandleClose }) => {
-  const [isModalOpen, setIsModalOpen] = useState(open);
+const EditFrameworkForm: React.FC<EditFrameworkFormProps> = ({ open, framework, onHandleClose }) => {
   const [form] = Form.useForm();
-
-  useEffect(() => {
-    setIsModalOpen(open);
-  }, [open]);
 
   const handleOk = async () => {
     try {
       form.validateFields().then(values => {
         const { product_ids, shop_titles, mode, started_at, ...rest } = values;
-
         const params = {
           ...rest,
           mode: +mode,
@@ -52,18 +47,18 @@ const FrameworkForm: React.FC<FrameworkFormProps> = ({ open, onHandleClose }) =>
           params.product_ids = shop_titles.split(',');
         }
 
-        creatFramework(params)
-          .then(({ data, message: msg }) => {
-            if (data) {
-              message.success(`${values.name} 框架创建成功`);
+        if (framework) {
+          editFramework(framework.id, params)
+            .then(({ data, message: msg }) => {
+              // if (data) {
               handleCancel();
-            } else {
-              message.error(msg);
-            }
-          })
-          .catch(err => {
-            console.log(err, 'err');
-          });
+              message.success(`${framework.name} 框架已修改`);
+              // }
+            })
+            .catch(err => {
+              console.log(err, 'err');
+            });
+        }
       });
     } catch (errorInfo) {
       console.error('Validation failed:', errorInfo);
@@ -71,13 +66,18 @@ const FrameworkForm: React.FC<FrameworkFormProps> = ({ open, onHandleClose }) =>
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false);
     onHandleClose();
   };
 
   return (
-    <Modal title={'新建框架'} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} destroyOnClose>
-      <Form form={form} labelCol={{ span: 4 }} layout="horizontal">
+    <Modal
+      title={framework ? `编辑 ${framework?.name} 框架` : '新建框架'}
+      open={open}
+      onOk={handleOk}
+      onCancel={handleCancel}
+      destroyOnClose
+    >
+      <Form form={form} labelCol={{ span: 4 }} layout="horizontal" initialValues={framework || {}} preserve={false}>
         <Form.Item label="框架名称" name="name" rules={[{ required: true, message: '请输入框架名称' }]}>
           <Input />
         </Form.Item>
@@ -106,4 +106,4 @@ const FrameworkForm: React.FC<FrameworkFormProps> = ({ open, onHandleClose }) =>
   );
 };
 
-export default FrameworkForm;
+export default EditFrameworkForm;
