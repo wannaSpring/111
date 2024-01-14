@@ -3,44 +3,63 @@ import type { FC } from 'react';
 
 import './index.less';
 
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { apiLogin } from '@/api/user.api';
+import LogoPng from '@/assets/logo/logo_w.png';
 import { LocaleFormatter, useLocale } from '@/locales';
+import { setUserItem } from '@/stores/user.store';
 import { formatSearch } from '@/utils/formatSearch';
 
-import { loginAsync } from '../../stores/user.action';
-
 const initialValues: LoginParams = {
-  username: 'guest',
-  password: 'guest',
+  account: 'guest',
+  pwd: 'guest',
   // remember: true
 };
 
 const LoginForm: FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch();
   const { formatMessage } = useLocale();
+  const dispatch = useDispatch();
 
-  const onFinished = async (form: LoginParams) => {
-    const res = dispatch(await loginAsync(form));
+  const onFinished = (form: LoginParams) => {
+    apiLogin(form).then(({ data }) => {
+      if (!!data) {
+        const search = formatSearch(location.search);
+        const from = search.from || { pathname: '/' };
 
-    if (!!res) {
-      const search = formatSearch(location.search);
-      const from = search.from || { pathname: '/' };
+        localStorage.setItem('MyUserInfo', data.access_token);
+        localStorage.setItem('username', form.account);
+        dispatch(
+          setUserItem({
+            logged: true,
+            username: form.account,
+          }),
+        );
 
-      navigate(from);
-    }
+        navigate(from);
+      }
+    });
   };
 
   return (
     <div className="login-page">
-      <Form<LoginParams> onFinish={onFinished} className="login-page-form" initialValues={initialValues}>
-        <h2>REACT ANTD ADMIN</h2>
+      <div className="logo">
+        <img src={LogoPng} alt="" />
+      </div>
+      <Form
+        name="normal_login"
+        className="login-form"
+        initialValues={{ remember: true }}
+        onFinish={onFinished}
+        size="large"
+      >
         <Form.Item
-          name="username"
+          name="account"
           rules={[
             {
               required: true,
@@ -50,14 +69,10 @@ const LoginForm: FC = () => {
             },
           ]}
         >
-          <Input
-            placeholder={formatMessage({
-              id: 'gloabal.tips.username',
-            })}
-          />
+          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="用户名" />
         </Form.Item>
         <Form.Item
-          name="password"
+          name="pwd"
           rules={[
             {
               required: true,
@@ -67,21 +82,17 @@ const LoginForm: FC = () => {
             },
           ]}
         >
-          <Input
-            type="password"
-            placeholder={formatMessage({
-              id: 'gloabal.tips.password',
-            })}
-          />
-        </Form.Item>
-        <Form.Item name="remember" valuePropName="checked">
-          <Checkbox>
-            <LocaleFormatter id="gloabal.tips.rememberUser" />
-          </Checkbox>
+          <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" placeholder="密码" />
         </Form.Item>
         <Form.Item>
-          <Button htmlType="submit" type="primary" className="login-page-form_button">
-            <LocaleFormatter id="gloabal.tips.login" />
+          <Form.Item name="remember" valuePropName="checked" noStyle>
+            <Checkbox>保存用户名</Checkbox>
+          </Form.Item>
+        </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit" className="login-form-button">
+            Log in
           </Button>
         </Form.Item>
       </Form>

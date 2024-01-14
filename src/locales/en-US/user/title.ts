@@ -1,7 +1,9 @@
 export const enUS_title = {
   'title.login': 'Login',
   'title.dashboard': 'Dashboard',
-  'title.documentation': 'Documentation',
+  'title.purchase': 'Purchase Order',
+  'title.frameworkList': 'List Of Framework',
+  'title.consumeTake': 'Consume Task',
   'title.guide': 'Guide',
   'title.permission.route': 'Route Permission',
   'title.permission.button': 'Button Permission',

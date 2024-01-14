@@ -6,20 +6,18 @@ import { createElement } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import { apiLogout } from '@/api/user.api';
 import Avator from '@/assets/header/avator.jpeg';
 import { ReactComponent as EnUsSvg } from '@/assets/header/en_US.svg';
 import { ReactComponent as LanguageSvg } from '@/assets/header/language.svg';
 import { ReactComponent as MoonSvg } from '@/assets/header/moon.svg';
 import { ReactComponent as SunSvg } from '@/assets/header/sun.svg';
 import { ReactComponent as ZhCnSvg } from '@/assets/header/zh_CN.svg';
-import AntdSvg from '@/assets/logo/antd.svg';
-import ReactSvg from '@/assets/logo/react.svg';
+import LogoPng from '@/assets/logo/logo.png';
+import verticalLogo from '@/assets/logo/verticalLogo.png';
 import { LocaleFormatter, useLocale } from '@/locales';
 import { setGlobalState } from '@/stores/global.store';
 import { setUserItem } from '@/stores/user.store';
-
-import { logoutAsync } from '../../stores/user.action';
-import HeaderNoticeComponent from './notice';
 
 const { Header } = Layout;
 
@@ -45,9 +43,17 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
       case 'userSetting':
         return;
       case 'logout':
-        const res = Boolean(await dispatch(logoutAsync()));
-
-        res && navigate('/login');
+        apiLogout({ token: localStorage.getItem('MyUserInfo')! })
+          .then(() => {
+            localStorage.clear();
+            navigate('/login');
+            dispatch(
+              setUserItem({
+                logged: false,
+              }),
+            );
+          })
+          .catch(() => {});
 
         return;
     }
@@ -76,15 +82,12 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
   return (
     <Header className="layout-page-header bg-2" style={{ backgroundColor: token.token.colorBgContainer }}>
       {device !== 'MOBILE' && (
-        <div className="logo" style={{ width: collapsed ? 80 : 200 }}>
-          <img src={ReactSvg} alt="" style={{ marginRight: collapsed ? '2px' : '20px' }} />
-          <img src={AntdSvg} alt="" />
+        <div className="logo" style={{ width: collapsed ? 80 : 200 }} onClick={toggle}>
+          <img src={collapsed ? verticalLogo : LogoPng} alt="" style={{ marginRight: collapsed ? '2px' : '20px' }} />
         </div>
       )}
       <div className="layout-page-header-main">
-        <div onClick={toggle}>
-          <span id="sidebar-trigger">{collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}</span>
-        </div>
+        <div></div>
         <div className="actions">
           <Tooltip
             title={formatMessage({
@@ -97,8 +100,8 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
               })}
             </span>
           </Tooltip>
-          <HeaderNoticeComponent />
-          <Dropdown
+          {/* <HeaderNoticeComponent /> */}
+          {/* <Dropdown
             menu={{
               onClick: info => selectLocale(info),
               items: [
@@ -120,7 +123,7 @@ const HeaderComponent: FC<HeaderProps> = ({ collapsed, toggle }) => {
             <span>
               <LanguageSvg id="language-change" />
             </span>
-          </Dropdown>
+          </Dropdown> */}
 
           {logged ? (
             <Dropdown

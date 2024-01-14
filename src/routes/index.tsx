@@ -12,9 +12,10 @@ import LoginPage from '@/pages/login';
 import WrapperRouteComponent from './config';
 
 const NotFound = lazy(() => import(/* webpackChunkName: "404'"*/ '@/pages/404'));
-const Documentation = lazy(() => import(/* webpackChunkName: "404'"*/ '@/pages/doucumentation'));
+const Purchase = lazy(() => import(/* webpackChunkName: "404'"*/ '@/pages/purchase'));
+const FrameworkList = lazy(() => import(/* webpackChunkName: "404'"*/ '@/pages/framework/list'));
+const FrameworkTask = lazy(() => import(/* webpackChunkName: "404'"*/ '@/pages/framework/consumeTask'));
 const Guide = lazy(() => import(/* webpackChunkName: "guide'"*/ '@/pages/guide'));
-const RoutePermission = lazy(() => import(/* webpackChunkName: "route-permission"*/ '@/pages/permission/route'));
 const FormPage = lazy(() => import(/* webpackChunkName: "form'"*/ '@/pages/components/form'));
 const TablePage = lazy(() => import(/* webpackChunkName: "table'"*/ '@/pages/components/table'));
 const SearchPage = lazy(() => import(/* webpackChunkName: "search'"*/ '@/pages/components/search'));
@@ -36,7 +37,7 @@ const routeList: RouteObject[] = [
   },
   {
     path: '/',
-    element: <WrapperRouteComponent element={<LayoutPage />} titleId="" />,
+    element: <WrapperRouteComponent element={<LayoutPage />} titleId="" auth />,
     children: [
       {
         path: '',
@@ -47,16 +48,20 @@ const routeList: RouteObject[] = [
         element: <WrapperRouteComponent element={<Dashboard />} titleId="title.dashboard" />,
       },
       {
-        path: 'documentation',
-        element: <WrapperRouteComponent element={<Documentation />} titleId="title.documentation" />,
+        path: 'purchase',
+        element: <WrapperRouteComponent element={<Purchase />} titleId="title.purchase" />,
+      },
+      {
+        path: '/framework/list',
+        element: <WrapperRouteComponent element={<FrameworkList />} titleId="title.frameworkList" />,
+      },
+      {
+        path: '/framework/consumeTake',
+        element: <WrapperRouteComponent element={<FrameworkTask />} titleId="title.consumeTake" />,
       },
       {
         path: 'guide',
         element: <WrapperRouteComponent element={<Guide />} titleId="title.guide" />,
-      },
-      {
-        path: 'permission/route',
-        element: <WrapperRouteComponent element={<RoutePermission />} titleId="title.permission.route" auth />,
       },
       {
         path: 'component/form',

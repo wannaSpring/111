@@ -1,6 +1,8 @@
 export const zhCN_component = {
   'component.search.request': '查询',
   'component.search.reset': '重置',
+  'component.search.import': '导入',
+  'component.search.export': '导出',
   'component.search.name': '姓名',
   'component.search.sex': '性别',
   'component.search.male': '男',

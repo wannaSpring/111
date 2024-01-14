@@ -2,16 +2,37 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f0f2f5;
-  &-form {
+  background-image: url('@/assets/logo/login_bg.jpg');
+  background-size: cover;
+
+  .login-form {
     width: 300px;
-    padding: 50px 40px 10px;
+    padding: 20px;
+    /* 设置元素的背景 */
+    background: rgba(246, 243, 243, 0.1);
+    /* 半透明白色 */
+
+    /* 应用模糊效果 */
+    backdrop-filter: blur(10px);
+
+    /* 可选：为元素添加边框和圆角 */
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 10px;
-    h2 {
-      text-align: center;
-    }
-    &_button {
+
+    .login-form-button {
       width: 100%;
+    }
+  }
+
+  .logo {
+    width: 130px;
+    position: absolute;
+    top: 50px;
+    left: 50px;
+
+    img {
+      width: 130px;
+
     }
   }
 }

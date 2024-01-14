@@ -12,27 +12,27 @@ Mock.setup({
 export type ArrayElementType<T> = T extends (infer U)[] ? U : any; // Mock the real back-end api structure.
 
 interface PageParams {
-  pageSize?: number;
-  pageNum?: number;
+  page_size?: number;
+  page_no?: number;
 }
 
 export function intercepter<T>(data: T): Response<T>;
-export function intercepter<T extends any[]>(data: T, page: PageParams): Response<PageData<T>>;
+export function intercepter<T>(data: T, page: PageParams): Response<PageData<T>>;
 
 export function intercepter(data: any, page?: PageParams) {
   if (page) {
-    const result = getTableData(Number(page.pageNum), Number(page.pageSize), data);
+    const res = getTableData(Number(page.page_size), Number(page.page_no), data);
 
     return {
-      status: true,
+      code: true,
       message: '成功',
-      result,
+      data: res,
     };
   } else {
     return {
-      status: true,
+      code: true,
       message: '成功',
-      result: data,
+      data: data,
     };
   }
 }

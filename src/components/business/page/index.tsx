@@ -3,6 +3,7 @@ import type { MyRadioCardssOption } from '../radio-cards';
 import type { MyTabsOption } from '../tabs';
 import type { MyResponse } from '@/api/request';
 import type { PageData } from '@/interface';
+import type { FormInstance } from 'antd';
 import type { ColumnsType } from 'antd/es/table/interface';
 
 import { css } from '@emotion/react';
@@ -26,9 +27,12 @@ export type MyPageTableOptions<S> = ColumnsType<S>;
 export interface PageProps<S> {
   searchRender?: React.ReactNode;
   pageApi?: S;
+  exportFunc?: (value: any) => void;
+  onFormChange?: (values: FormInstance<S>) => void;
   pageParams?: object;
   tableOptions?: MyPageTableOptions<ParseDataType<S>>;
   tableRender?: (data: MyPageTableOptions<ParseDataType<S>>[]) => React.ReactNode;
+  extraOperationRender?: React.ReactNode;
   asideData?: MyAsideProps['options'];
   asideKey?: string;
   asideValue?: string | number;
@@ -37,6 +41,7 @@ export interface PageProps<S> {
   asideTreeItemRender?: MyAsideProps['titleRender'];
   tabsData?: MyTabsOption[];
   tabsValue?: string | number;
+  className?: string;
 }
 
 export interface RefPageProps {
@@ -49,22 +54,27 @@ const BasePage = <S extends SearchApi>(props: PageProps<S>, ref: React.Ref<RefPa
     pageApi,
     pageParams,
     searchRender,
+    extraOperationRender,
+    exportFunc,
     tableOptions,
     tableRender,
     asideKey,
     asideData,
     asideValue,
+    onFormChange,
     asideTreeItemRender,
     radioCardsData,
     radioCardsValue,
     tabsData,
     tabsValue,
+    className,
   } = props;
   const [pageData, setPageData] = useStates<PageData<ParseDataType<S>>>({
-    pageSize: 20,
-    pageNum: 1,
-    total: 0,
-    data: [],
+    page_size: 50,
+    page_no: 1,
+    item_count: 0,
+    list: [],
+    page_count: 0,
   });
 
   const [asideCheckedKey, setAsideCheckedKey] = useState(asideValue);
@@ -83,18 +93,18 @@ const BasePage = <S extends SearchApi>(props: PageProps<S>, ref: React.Ref<RefPa
         const obj = {
           ...params,
           ...pageParams,
-          pageSize: pageData.pageSize,
-          pageNum: pageData.pageNum,
+          page_size: pageData.page_size,
+          page_no: pageData.page_no,
           [asideKey!]: asideCheckedKey,
         };
-        const res = await pageApi(obj);
+        const { data } = await pageApi(obj);
 
-        if (res.status) {
-          setPageData({ total: res.result.total, data: res.result.data });
+        if (data) {
+          setPageData({ item_count: data.item_count, list: data.list });
         }
       }
     },
-    [pageApi, pageParams, pageData.pageSize, pageData.pageNum, asideKey, asideCheckedKey],
+    [pageApi, pageParams, asideKey, asideCheckedKey, pageData.page_size, pageData.page_no],
   );
 
   useEffect(() => {
@@ -109,11 +119,11 @@ const BasePage = <S extends SearchApi>(props: PageProps<S>, ref: React.Ref<RefPa
     setAsideCheckedKey(key);
   };
 
-  const onPageChange = (pageNum: number, pageSize?: number) => {
-    setPageData({ pageNum });
+  const onPageChange = (page_no: number, page_size?: number) => {
+    setPageData({ page_no });
 
-    if (pageSize) {
-      setPageData({ pageSize });
+    if (page_size) {
+      setPageData({ page_size });
     }
   };
 
@@ -123,7 +133,7 @@ const BasePage = <S extends SearchApi>(props: PageProps<S>, ref: React.Ref<RefPa
   }));
 
   return (
-    <div css={styles}>
+    <div css={styles} className={className}>
       {tabsData && <MyTabs className="tabs" options={tabsData} defaultValue={tabsData[0].value || tabsValue} />}
       <div className="tabs-main">
         {asideData && (
@@ -136,7 +146,13 @@ const BasePage = <S extends SearchApi>(props: PageProps<S>, ref: React.Ref<RefPa
         )}
         <div className="aside-main">
           {searchRender && (
-            <MySearch className="search" onSearch={onSearch}>
+            <MySearch
+              className="search"
+              onSearch={onSearch}
+              onFormChange={onFormChange}
+              exportFunc={exportFunc}
+              extraOperationRender={extraOperationRender}
+            >
               {searchRender}
             </MySearch>
           )}
@@ -147,16 +163,16 @@ const BasePage = <S extends SearchApi>(props: PageProps<S>, ref: React.Ref<RefPa
             <div className="table">
               <MyTable
                 height="100%"
-                dataSource={pageData.data}
+                dataSource={pageData.list}
                 columns={tableOptions}
                 pagination={{
-                  current: pageData.pageNum,
-                  pageSize: pageData.pageSize,
-                  total: pageData.total,
+                  current: pageData.page_no,
+                  pageSize: pageData.page_size,
+                  total: pageData.item_count,
                   onChange: onPageChange,
                 }}
               >
-                {tableRender?.(pageData.data)}
+                {tableRender?.(pageData.list)}
               </MyTable>
             </div>
           )}

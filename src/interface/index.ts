@@ -8,8 +8,16 @@ export interface Locales<T = any> {
 export type Language = keyof Locales;
 
 export interface PageData<T> {
-  pageNum: number;
-  pageSize: number;
-  total: number;
-  data: T[];
+  page_no: number;
+  page_size: number;
+  page_count: number;
+  item_count: number;
+  list: T[];
+}
+
+export interface BasicList {
+  page_no: number;
+  page_size: number;
+  page_count: number;
+  item_count: number;
 }

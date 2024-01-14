@@ -10,6 +10,7 @@ import { Outlet, useLocation } from 'react-router';
 
 import { getMenuList } from '@/api/layout.api';
 import { setUserItem } from '@/stores/user.store';
+import localMenuList from '@/utils/consts';
 import { getFirstPathCode } from '@/utils/getFirstPathCode';
 import { getGlobalState } from '@/utils/getGloabal';
 
@@ -65,16 +66,18 @@ const LayoutPage: FC = () => {
   };
 
   const fetchMenuList = useCallback(async () => {
-    const { status, result } = await getMenuList();
+    // const res = await getMenuList();
 
-    if (status) {
-      setMenuList(result);
-      dispatch(
-        setUserItem({
-          menuList: initMenuListAll(result),
-        }),
-      );
-    }
+    // console.log(res);
+    // if (status) {
+
+    setMenuList(localMenuList);
+    dispatch(
+      setUserItem({
+        menuList: initMenuListAll(localMenuList),
+      }),
+    );
+    // }
   }, [dispatch]);
 
   useEffect(() => {

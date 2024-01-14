@@ -7,15 +7,15 @@ import { createAsyncAction } from './utils';
 // typed wrapper async thunk function demo, no extra feature, just for powerful typings
 export const loginAsync = createAsyncAction<LoginParams, boolean>(payload => {
   return async dispatch => {
-    const { result, status } = await apiLogin(payload);
+    const { data } = await apiLogin(payload);
 
-    if (status) {
-      localStorage.setItem('t', result.token);
-      localStorage.setItem('username', result.username);
+    if (data) {
+      localStorage.setItem('MyUserInfo', data.access_token);
+      localStorage.setItem('username', payload.account);
       dispatch(
         setUserItem({
           logged: true,
-          username: result.username,
+          username: payload.account,
         }),
       );
 
@@ -28,19 +28,20 @@ export const loginAsync = createAsyncAction<LoginParams, boolean>(payload => {
 
 export const logoutAsync = () => {
   return async (dispatch: Dispatch) => {
-    const { status } = await apiLogout({ token: localStorage.getItem('t')! });
+    return await apiLogout({ token: localStorage.getItem('MyUserInfo')! })
+      .then(() => {
+        console.log('??');
+        localStorage.clear();
+        dispatch(
+          setUserItem({
+            logged: false,
+          }),
+        );
 
-    if (status) {
-      localStorage.clear();
-      dispatch(
-        setUserItem({
-          logged: false,
-        }),
-      );
-
-      return true;
-    }
-
-    return false;
+        return true;
+      })
+      .catch(() => {
+        return false;
+      });
   };
 };

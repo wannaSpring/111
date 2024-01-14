@@ -1,0 +1,29 @@
+.operationWrap {
+  margin-left: auto;
+}
+
+.consumeTaskWrap {
+  display: flex;
+  flex: 1 1 0%;
+  overflow: hidden;
+  flex-direction: column;
+
+  .searchWrap {
+    display: flex;
+    align-items: center;
+  }
+
+  .table {
+    flex: 1;
+    overflow: hidden;
+
+    @media screen and (max-height: 800px) {
+      overflow: auto;
+      min-height: 500px;
+    }
+  }
+
+  .ant-form-item {
+    margin: 0;
+  }
+}

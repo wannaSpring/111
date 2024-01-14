@@ -2,10 +2,10 @@ import type { AxiosRequestConfig, Method } from 'axios';
 
 import { message as $message } from 'antd';
 import axios from 'axios';
+import qs from 'query-string';
 
 import store from '@/stores';
 import { setGlobalState } from '@/stores/global.store';
-// import { history } from '@/routes/history';
 
 const axiosInstance = axios.create({
   timeout: 6000,
@@ -18,6 +18,16 @@ axiosInstance.interceptors.request.use(
         loading: true,
       }),
     );
+
+    if (config && config.headers) {
+      config.headers['Access-Token'] = localStorage.getItem('MyUserInfo') || '';
+    }
+
+    if (config.method === 'get') {
+      config.paramsSerializer = function (params) {
+        return qs.stringify(params, { arrayFormat: 'comma' });
+      };
+    }
 
     return config;
   },
@@ -73,9 +83,9 @@ axiosInstance.interceptors.response.use(
 );
 
 export type Response<T = any> = {
-  status: boolean;
+  code: number;
   message: string;
-  result: T;
+  data: T;
 };
 
 export type MyResponse<T = any> = Promise<Response<T>>;
@@ -93,7 +103,7 @@ export const request = <T = any>(
   config?: AxiosRequestConfig,
 ): MyResponse<T> => {
   // const prefix = '/api'
-  const prefix = '';
+  const prefix = '/api/v1';
 
   url = prefix + url;
 

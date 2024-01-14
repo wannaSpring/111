@@ -3,16 +3,13 @@ export type Role = 'guest' | 'admin';
 
 export interface LoginParams {
   /** 用户名 */
-  username: string;
+  account: string;
   /** 用户密码 */
-  password: string;
+  pwd: string;
 }
 
 export interface LoginResult {
-  /** auth token */
-  token: string;
-  username: string;
-  role: Role;
+  access_token: string;
 }
 
 export interface LogoutParams {

@@ -13,13 +13,13 @@ const mockMenuList: MenuList = [
     path: '/dashboard',
   },
   {
-    code: 'documentation',
+    code: 'purchase',
     label: {
-      zh_CN: '文档',
-      en_US: 'Documentation',
+      zh_CN: '订单',
+      en_US: 'Purchase Order',
     },
     icon: 'documentation',
-    path: '/documentation',
+    path: '/purchase',
   },
   {
     code: 'guide',
@@ -170,4 +170,5 @@ const mockMenuList: MenuList = [
   },
 ];
 
-mock.mock('/user/menu', 'get', intercepter(mockMenuList));
+mock.mock('/api/v1/user/menu', 'get', intercepter(mockMenuList));
+// http://localhost:8889/api/v1/user/menu

@@ -15,9 +15,8 @@ export default defineConfig({
     port: 8889,
     proxy: {
       '/api': {
-        target: `http://localhost:${process.env.PORT}/api`,
-        // changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, ''),
+        target: 'http://apisys.chxx.com', // 实际请求的目标服务器
+        changeOrigin: true, // 是否改变域名
       },
     },
   },

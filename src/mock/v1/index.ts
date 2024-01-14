@@ -42,9 +42,11 @@ new Array(30).fill(undefined).forEach((item, index) => {
   });
 });
 
-mock.mock(/\/business\/list*/, 'get', (config: any) => {
+mock.mock(/\/api\/v1\/frames\/list*/, 'get', (config: any) => {
   const jsonParams = config.url.split('?')[1];
   const params = qs.parse(jsonParams);
-  console.log(intercepter(data, params))
+
+  console.log(intercepter(data, params));
+
   return intercepter(data, params);
 });

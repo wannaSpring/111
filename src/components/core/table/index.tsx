@@ -16,8 +16,8 @@ const MyTable = <T extends object = object>(props: MyTableProps<T>) => {
     size: 'default',
     showQuickJumper: true,
     showSizeChanger: true,
-    pageSizeOptions: ['10', '20', '50', '100', '200'],
-    defaultPageSize: 20,
+    pageSizeOptions: ['30', '50', '100'],
+    defaultPageSize: 50,
   };
 
   const combinedPagination = typeof pagination === 'object' ? { ...defaultPagination, ...pagination } : {};
